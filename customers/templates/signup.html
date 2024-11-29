@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Sign Up</h2>
+    
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="mb-3">
+            <label for="phone">Phone</label>
+            <input type="text" id="phone" name="phone" class="form-control" required>
+        </div>
+        <select name="group" id="group" class="form-select">
+            <option value="Customer">Customer</option>
+            <option value="Support">Support Agent</option>
+        </select>
+        <div class="mb-3">
+            <label for="address">Address</label>
+            <textarea id="address" name="address" class="form-control" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Sign Up</button>
+    </form>
+</div>
+{% endblock %}
