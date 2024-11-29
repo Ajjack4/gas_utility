@@ -23,7 +23,13 @@
                 </span>
             </td>
             <td>{{ request.submitted_at|date:"Y-m-d H:i" }}</td>
-            <td>{{ request.resolved_at|date:"Y-m-d H:i" if request.resolved_at else "N/A" }}</td>
+            <td>
+                {% if request.resolved_at %}
+                    {{ request.resolved_at|date:"Y-m-d H:i" }}
+                {% else %}
+                    N/A
+                {% endif %}
+            </td>
         </tr>
         {% empty %}
         <tr>

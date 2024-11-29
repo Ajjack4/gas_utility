@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 
 {% block title %}New Service Request{% endblock %}
@@ -9,15 +10,15 @@
         {% csrf_token %}
         <div class="mb-3">
             <label for="id_request_type" class="form-label">Request Type</label>
-            {{ form.request_type|as_widget: "class=form-select" }}
+            {{ form.request_type }}
         </div>
         <div class="mb-3">
             <label for="id_details" class="form-label">Details</label>
-            {{ form.details|as_widget: "class=form-control", "rows=4" }}
+            {{ form.details }}
         </div>
         <div class="mb-3">
             <label for="id_attachment" class="form-label">Attachment (Optional)</label>
-            {{ form.attachment|as_widget: "class=form-control" }}
+            {{ form.attachment }}
         </div>
         <button type="submit" class="btn btn-primary w-100">Submit Request</button>
     </form>

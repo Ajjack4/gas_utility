@@ -12,8 +12,8 @@ def create_request(request):
             return redirect('track_request')
     else:
         form = ServiceRequestForm()
-    return render(request, 'customers/service_request.html', {'form': form})
+    return render(request, 'service_request.html', {'form': form})
 
 def track_request(request):
     requests = ServiceRequest.objects.filter(customer=request.user.customer)
-    return render(request, 'customers/request_status.html', {'requests': requests})
+    return render(request, 'request_status.html', {'requests': requests})
