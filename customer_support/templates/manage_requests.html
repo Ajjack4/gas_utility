@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Service Requests{% endblock %}
+
+{% block content %}
+<h2 class="text-center">Manage Service Requests</h2>
+<table class="table table-hover mt-4">
+    <thead class="table-dark">
+        <tr>
+            <th>Customer</th>
+            <th>Request Type</th>
+            <th>Status</th>
+            <th>Submitted At</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for request in requests %}
+        <tr>
+            <td>{{ request.customer.user.username }}</td>
+            <td>{{ request.get_request_type_display }}</td>
+            <td>
+                <span class="badge {% if request.status == 'pending' %}bg-warning{% elif request.status == 'in_progress' %}bg-info{% else %}bg-success{% endif %}">
+                    {{ request.get_status_display }}
+                </span>
+            </td>
+            <td>{{ request.submitted_at|date:"Y-m-d H:i" }}</td>
+            <td>
+                <a href="#" class="btn btn-sm btn-outline-primary">View</a>
+                <a href="#" class="btn btn-sm btn-outline-success">Resolve</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" class="text-center">No service requests to manage.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

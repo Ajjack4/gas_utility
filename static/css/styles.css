@@ -1,0 +1,26 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.card {
+    border-radius: 10px;
+    background-color: #ffffff;
+}
+
+h2 {
+    color: #333;
+}
+
+.table {
+    background-color: #ffffff;
+}
+
+.badge {
+    font-size: 0.9rem;
+}
