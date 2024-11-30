@@ -19,48 +19,31 @@ def login_view(request):
             login(request, user)
             # Redirect based on group
             if user.groups.filter(name='Support').exists():
-                return redirect('support:manage_requests')  # Update with actual support dashboard URL
+                return redirect('/support/manage/') 
             else:
-                return redirect('/customer/track/')  # Update with actual customer dashboard URL
+                return redirect('/customer/track/')  
         else:
             messages.error(request, 'Invalid username or password.')
     else:
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
 
-# def signup_view(request):
-#     if request.method == 'POST':
-#         form = UserCreationForm(request.POST)
-#         if form.is_valid():
-#             user = form.save()
-#             # Assign to the "Customer" group (if applicable)
-#             group, created = Group.objects.get_or_create(name="Customer")
-#             user.groups.add(group)
-            
-#             # Create a Customer instance for this user
-#             phone = request.POST.get('phone', '')
-#             address = request.POST.get('address', '')
-#             Customer.objects.create(user=user, phone=phone, address=address)
-            
-#             return redirect('/customer/track/')  # Redirect to tracking page
-#     else:
-#         form = UserCreationForm()
-#     return render(request, 'signup.html', {'form': form})
+
 def signup_view(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
 
-            # Get user type from the form (ensure it's explicitly provided)
+           
             user_type = request.POST.get('user_type')
             
             if user_type == 'customer':
-                # Assign to the "Customer" group
+                
                 group, created = Group.objects.get_or_create(name="Customer")
                 user.groups.add(group)
                 
-                # Create a Customer instance
+               
                 phone = request.POST.get('phone', '').strip()
                 address = request.POST.get('address', '').strip()
 
@@ -73,13 +56,13 @@ def signup_view(request):
                     return render(request, 'signup.html', {'form': form})
             
             elif user_type == 'support':
-                # Assign to the "Support" group
+               
                 group, created = Group.objects.get_or_create(name="Support")
                 user.groups.add(group)
                 messages.success(request, "Your account has been created successfully as a Support user.")
 
             else:
-                # Handle invalid user_type
+               
                 form.add_error(None, "Invalid user type selected.")
                 return render(request, 'signup.html', {'form': form})
 
@@ -92,7 +75,7 @@ def signup_view(request):
 @login_required
 def create_request(request):
     try:
-        customer = request.user.customer  # Access the related Customer instance
+        customer = request.user.customer  
     except Customer.DoesNotExist:
         return HttpResponseForbidden("You are not registered as a customer.")
     if request.method == "POST":
@@ -112,7 +95,7 @@ def create_request(request):
 @login_required
 def track_request(request):
     try:
-        customer = request.user.customer  # Access the related Customer instance
+        customer = request.user.customer  
     except Customer.DoesNotExist:
         return HttpResponseForbidden("You are not registered as a customer.")
     

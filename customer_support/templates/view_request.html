@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Service Request Details{% endblock %}
+
+{% block content %}
+<h2 class="text-center">Service Request Details</h2>
+<div class="card mt-4">
+    <div class="card-header">
+        Request ID: {{ service_request.id }}
+    </div>
+    <div class="card-body">
+        <p><strong>Customer:</strong> {{ service_request.customer.user.username }}</p>
+        <p><strong>Request Type:</strong> {{ service_request.get_request_type_display }}</p>
+        <p><strong>Status:</strong>
+            <span class="badge {% if service_request.status == 'pending' %}bg-warning{% elif service_request.status == 'in_progress' %}bg-info{% else %}bg-success{% endif %}">
+                {{ service_request.get_status_display }}
+            </span>
+        </p>
+        <p><strong>Details:</strong> {{ service_request.details }}</p>
+        <p><strong>Submitted At:</strong> {{ service_request.submitted_at|date:"Y-m-d H:i" }}</p>
+        {% if service_request.resolved_at %}
+        <p><strong>Resolved At:</strong> {{ service_request.resolved_at|date:"Y-m-d H:i" }}</p>
+        {% endif %}
+        {% if service_request.attachment %}
+        <p><strong>Attachment:</strong> <a href="{{ service_request.attachment.url }}">Download</a></p>
+        {% endif %}
+    </div>
+</div>
+<a href="{% url 'support:manage_requests' %}" class="btn btn-secondary mt-4">Back to Manage Requests</a>
+{% endblock %}
