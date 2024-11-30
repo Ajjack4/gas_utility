@@ -9,19 +9,30 @@
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
+        
+        <!-- Add a dropdown to select the user type -->
         <div class="mb-3">
-            <label for="phone">Phone</label>
-            <input type="text" id="phone" name="phone" class="form-control" required>
+            <label for="user_type">User Type</label>
+            <select id="user_type" name="user_type" class="form-control" required>
+                <option value="customer">Customer</option>
+                <option value="support">Support</option>
+            </select>
         </div>
-        <select name="group" id="group" class="form-select">
-            <option value="Customer">Customer</option>
-            <option value="Support">Support Agent</option>
-        </select>
-        <div class="mb-3">
-            <label for="address">Address</label>
-            <textarea id="address" name="address" class="form-control" required></textarea>
+    
+        <!-- Customer-specific fields -->
+        <div id="customer-fields">
+            <div class="mb-3">
+                <label for="phone">Phone</label>
+                <input type="text" id="phone" name="phone" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label for="address">Address</label>
+                <textarea id="address" name="address" class="form-control"></textarea>
+            </div>
         </div>
+    
         <button type="submit" class="btn btn-primary">Sign Up</button>
     </form>
+    
 </div>
 {% endblock %}

@@ -7,6 +7,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import Group
 from django.contrib import messages
 from .models import Customer
+from django.contrib.auth.decorators import login_required
 def home(request):
     return render(request, 'home.html')
 
@@ -27,24 +28,68 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
 
+# def signup_view(request):
+#     if request.method == 'POST':
+#         form = UserCreationForm(request.POST)
+#         if form.is_valid():
+#             user = form.save()
+#             # Assign to the "Customer" group (if applicable)
+#             group, created = Group.objects.get_or_create(name="Customer")
+#             user.groups.add(group)
+            
+#             # Create a Customer instance for this user
+#             phone = request.POST.get('phone', '')
+#             address = request.POST.get('address', '')
+#             Customer.objects.create(user=user, phone=phone, address=address)
+            
+#             return redirect('/customer/track/')  # Redirect to tracking page
+#     else:
+#         form = UserCreationForm()
+#     return render(request, 'signup.html', {'form': form})
 def signup_view(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            # Assign to the "Customer" group (if applicable)
-            group, created = Group.objects.get_or_create(name="Customer")
-            user.groups.add(group)
+
+            # Get user type from the form (ensure it's explicitly provided)
+            user_type = request.POST.get('user_type')
             
-            # Create a Customer instance for this user
-            phone = request.POST.get('phone', '')
-            address = request.POST.get('address', '')
-            Customer.objects.create(user=user, phone=phone, address=address)
+            if user_type == 'customer':
+                # Assign to the "Customer" group
+                group, created = Group.objects.get_or_create(name="Customer")
+                user.groups.add(group)
+                
+                # Create a Customer instance
+                phone = request.POST.get('phone', '').strip()
+                address = request.POST.get('address', '').strip()
+
+                if phone and address:
+                    Customer.objects.create(user=user, phone=phone, address=address)
+                    messages.success(request, "Your account has been created successfully as a Customer.")
+                    return redirect('/customer/track/')
+                else:
+                    form.add_error(None, "Phone and Address are required for Customer signups.")
+                    return render(request, 'signup.html', {'form': form})
             
-            return redirect('/customer/track/')  # Redirect to tracking page
+            elif user_type == 'support':
+                # Assign to the "Support" group
+                group, created = Group.objects.get_or_create(name="Support")
+                user.groups.add(group)
+                messages.success(request, "Your account has been created successfully as a Support user.")
+
+            else:
+                # Handle invalid user_type
+                form.add_error(None, "Invalid user type selected.")
+                return render(request, 'signup.html', {'form': form})
+
+            # Redirect to login after successful signup
+            return redirect('login')
     else:
         form = UserCreationForm()
+
     return render(request, 'signup.html', {'form': form})
+@login_required
 def create_request(request):
     try:
         customer = request.user.customer  # Access the related Customer instance
@@ -64,6 +109,7 @@ def create_request(request):
 # def track_request(request):
 #     requests = ServiceRequest.objects.filter(customer=request.user.customer)
 #     return render(request, 'request_status.html', {'requests': requests})
+@login_required
 def track_request(request):
     try:
         customer = request.user.customer  # Access the related Customer instance
