@@ -13,11 +13,13 @@ The separation of these apps allows for future scalability with Docker and Kuber
 - **Customer Portal**:  
   - Register and log in.  
   - Submit and track service requests.  
-
+![Submit Request](images/submit_request.png)
+![Your Request](images/your_request.png)
 - **Support Portal**:  
   - View all customer requests.  
   - Update request statuses (e.g., resolve).  
-
+![Manage Request](images/manage_request.png)
+![View Request](images/view_request.png)
 - **Admin Panel**:  
   - Manage users and groups.  
 
